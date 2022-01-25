@@ -99,14 +99,11 @@ async function getCategory(catId) {
 async function fillTable() {
 
     let $tr = $('<tr>');
-    for (let i = 0; i <= 5; i++) {
-        $tr.append(`<th scope="col">${categories[i].title.toUpperCase()}</th>`)
-    }
-    $('thead').append($tr)
-    for (let i = 0; i < 5; i++) {
+    
+    for (let i = 0; i < 6; i++) {
         let $tr = $("<tr>");
-        for (let j = 0; j < 6; j++) {
-            $tr.append(`<td id="${i}-${j}"class="question"><p>?</p></td>`)
+        for (let j = 0; j < 5; j++) {
+            $tr.append(`<td id="${i}-${j}"class="question"></td>`)
 
         }
         $('tbody').append($tr)

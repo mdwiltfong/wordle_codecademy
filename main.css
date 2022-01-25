@@ -1,40 +1,16 @@
-/* some colors you may find useful:
-  #115ff4
-  #060ce9
-  #28a200
-  #8d2ab5
-  #74119c
-*/
-body {
-    height: auto;
-    width: auto;
-    color: white;
-    font-size: 9pt;
-  }
-  
-  
-  .question,
-  th {
-    text-align: center;
-  }
-  
-  .question p {
-    margin: 2em 0;
-    z-index: 0;
-    display: inline-block;
-  }
-  
-  td {
-  
-    height: 9em;
-    width: 12em;
-    display: table-cell;
-    border: 2px solid white;
-    z-index: 8;
-  
-  }
-  
-  th {
-    text-shadow: 1px 1px yellow;
-    border: 2px solid white;
-  }
+#table-container{
+    border: 2px solid red;
+    width: 350px;
+    height: 420px;
+    margin: 0 auto
+}
+table{
+    margin: auto 0;
+    width: 25%;
+}
+table td{
+    width:62px;
+    height: 62px;
+    border: 5px solid black
+}
+
