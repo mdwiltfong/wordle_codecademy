@@ -54,4 +54,6 @@ header {
   border: 2px solid #686869;
   min-width: 60px;
   min-height: 60px;
+  font-size: 2rem;
+  font-weight: bold;
 }
