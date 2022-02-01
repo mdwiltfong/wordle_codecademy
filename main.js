@@ -176,7 +176,7 @@ async function setupAndStart() {
 
 /** On click of start / restart button, set up game. */
 // TODO
-$('button').on('click', setupAndStart)
+$(window).on('load', setupAndStart)
 
 
 /** On page load, add event handler for clicking clues */
