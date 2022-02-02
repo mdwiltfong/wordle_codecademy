@@ -1,3 +1,5 @@
+/* Part 1 of Styling */
+
 * {
   margin: 0;
   padding: 0;
@@ -57,6 +59,8 @@ header {
   box-sizing: border-box;
 }
 
+/* ####################################################### Now Onto JS */
+
 .square {
   border: 2px solid rgb(58, 58, 60);
   min-width: 60px;
@@ -70,6 +74,8 @@ header {
   justify-content: center;
   align-items: center;
 }
+
+/* After creating the keyboard html, we'll style the buttons */
 
 #keyboard-container {
   height: 200px;
