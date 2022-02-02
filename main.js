@@ -10,6 +10,14 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log(letter);
     };
   }
+
+  /*
+// One way to use event capturing. This is a better way to handle event listeners especialy when content is dynamically rendered
+const keyboard = document.querySelector("#keyboard-container");
+  keyboard.onclick = (e) => {
+    console.log(e.target.getAttribute("data-key"));
+  }; */
+
   function createSquares() {
     const gameBoard = document.getElementById("board");
 
