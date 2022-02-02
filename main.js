@@ -36,6 +36,10 @@ const keyboard = document.querySelector("#keyboard-container");
     if (currentWordArr.length != 5) {
       window.alert("Word Must be 5 letters");
     }
+    const currentWord = currentWordArr.join("");
+    if (currentWord == word) {
+      window.alert("Congratulations!");
+    }
   }
 
   function createSquares() {
