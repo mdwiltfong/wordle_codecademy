@@ -31,6 +31,19 @@ const keyboard = document.querySelector("#keyboard-container");
       availableSpaceEl.textContent = letter;
     }
   }
+  function getTileColor(letter, index) {
+    const isCorrectLetter = word.includes(letter);
+    if (!isCorrectLetter) {
+      return "rgb(58,58,60)";
+    }
+
+    const letterInThatPosition = word.charAt(index);
+    const isCorrectPosition = letter === letterInThatPosition;
+    if (isCorrectPosition) {
+      return "rgb(83,141,78)";
+    }
+    return "rgb(181,159,59)";
+  }
 
   function handleSubmitWord() {
     const currentWordArr = getCurrentWordArr();
@@ -42,7 +55,7 @@ const keyboard = document.querySelector("#keyboard-container");
     const interval = 200;
     currentWordArr.forEach((letter, index) => {
       setTimeout(() => {
-        const tileColor = "rgb(58,58,58)";
+        const tileColor = getTileColor(letter, index);
         const letterId = firstLetterId + index;
         const letterEl = document.getElementById(letterId);
         letterEl.classList.add("animate__flipInX");
