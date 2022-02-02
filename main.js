@@ -62,6 +62,8 @@ const keyboard = document.querySelector("#keyboard-container");
         letterEl.style = `background-color:${tileColor};border-color: ${tileColor}`;
       }, interval * index);
     });
+
+    guessedWordCount += 1;
     if (currentWord == word) {
       window.alert("Congratulations!");
     }
@@ -70,7 +72,15 @@ const keyboard = document.querySelector("#keyboard-container");
       window.alert(`Sorry, you have no more guesses! The word is ${word}`);
     }
   }
+  function handleDeleteLetter() {
+    const currentWordArr = getCurrentWordArr();
+    const removedLetter = currentWordArr.pop();
 
+    guesswords[guesswords.length - 1] = currentWordArr;
+    const lastLetterEl = document.getElementById(String(availableSpace - 1));
+    lastLetterEl.textContent = " ";
+    availableSpace = availableSpace - 1;
+  }
   function createSquares() {
     const gameBoard = document.getElementById("board");
 
@@ -88,6 +98,10 @@ const keyboard = document.querySelector("#keyboard-container");
       const letter = target.getAttribute("data-key");
       if (letter == "enter") {
         handleSubmitWord();
+        return;
+      }
+      if (letter == "del") {
+        handleDeleteLetter();
         return;
       }
 
