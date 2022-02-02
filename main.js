@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   createSquares();
   const guesswords = [[]];
   let word = "dairy";
+  let guessedWordCount = 0;
   let availableSpace = 1;
   const keys = document.querySelectorAll(".keyboard-row button");
   console.log(keys);
@@ -37,6 +38,17 @@ const keyboard = document.querySelector("#keyboard-container");
       window.alert("Word Must be 5 letters");
     }
     const currentWord = currentWordArr.join("");
+    const firstLetterId = guessedWordCount * 5 + 1;
+    const interval = 200;
+    currentWordArr.forEach((letter, index) => {
+      setTimeout(() => {
+        const tileColor = "rgb(58,58,58)";
+        const letterId = firstLetterId + index;
+        const letterEl = document.getElementById(letterId);
+        letterEl.classList.add("animate__flipInX");
+        letterEl.style = `background-color:${tileColor};border-color: ${tileColor}`;
+      }, interval * index);
+    });
     if (currentWord == word) {
       window.alert("Congratulations!");
     }
