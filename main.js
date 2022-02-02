@@ -40,6 +40,10 @@ const keyboard = document.querySelector("#keyboard-container");
     if (currentWord == word) {
       window.alert("Congratulations!");
     }
+    guesswords.push([]);
+    if (guesswords.length > 6) {
+      window.alert(`Sorry, you have no more guesses! The word is ${word}`);
+    }
   }
 
   function createSquares() {
