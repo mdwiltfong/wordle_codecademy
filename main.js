@@ -1,184 +1,126 @@
-let url = `https://jservice.io/api`;
-
-// categories is the main data structure for the app; it looks like this:
-
-//  [
-//    { title: "Math",
-//      clues: [
-//        {question: "2+2", answer: 4, showing: null},
-//        {question: "1+1", answer: 2, showing: null}
-//        ...
-//      ],
-//    },
-//    { title: "Literature",
-//      clues: [
-//        {question: "Hamlet Author", answer: "Shakespeare", showing: null},
-//        {question: "Bell Jar Author", answer: "Plath", showing: null},
-//        ...
-//      ],
-//    },
-//    ...
-//  ]
-
-let categories = [];
+/* 
+1. First create the eventlistener for when the DOM content is loaded
 
 
-/** Get NUM_CATEGORIES random category from API.
- *
- * Returns array of category ids
- */
+*/
 
-async function getCategoryIds() {
+document.addEventListener("DOMContentLoaded", () => {
+  createSquares();
 
-    const res = await axios.get(`${url+'/categories'}`, {
-        params: {
-            count: '100'
-        }
-    })
-    let result = [];
-    try {
-        let i = 0;
-        while (i < 7) {
-            let idx = Math.floor(Math.random() * 100);
-            if(!result.includes(res.data[idx].id)){
-                result.push(res.data[idx].id)
-                i++
-            }
-        }
-        return result
-    } catch (e) {
-        return e
+  let word = "dairy";
+  let guessedWordCount = 0;
+  let availableSpace = 1;
+
+  /* Third Function: Update an array of guessed words. This will serve as our memory */
+  function getCurrentWordArr() {
+    const numberOfGuessesWords = guesswords.length;
+    return guesswords[numberOfGuessesWords - 1];
+  }
+  const guesswords = [[]];
+
+  function updateGuessedWords(letter) {
+    const currentWordArr = getCurrentWordArr();
+
+    if (currentWordArr && currentWordArr.length < 5) {
+      currentWordArr.push(letter);
+      /* Here we assign the letter to the available space */
+      const availableSpaceEl = document.getElementById(String(availableSpace));
+
+      availableSpace = availableSpace + 1;
+      availableSpaceEl.textContent = letter;
+    }
+  }
+  function getTileColor(letter, index) {
+    const isCorrectLetter = word.includes(letter);
+    if (!isCorrectLetter) {
+      return "rgb(58,58,60)";
     }
 
-}
-
-/** Return object with data about a category:
- *
- *  Returns { title: "Math", clues: clue-array }
- *
- * Where clue-array is:
- *   [
- *      {question: "Hamlet Author", answer: "Shakespeare", showing: null},
- *      {question: "Bell Jar Author", answer: "Plath", showing: null},
- *      ...
- *   ]
- */
-
-async function getCategory(catId) {
-
-    const res = await axios.get(`${url+'/clues'}`, {
-        params: {
-            category: `${catId}`
-        }
-    })
-
-
-
-    let clues = res.data.map((x) => {
-        return {
-            question: x.question,
-            answer: x.answer,
-            showing: null
-        }
-    })
-    return {
-        title: `${res.data[0].category.title}`,
-        clue: clues,
+    const letterInThatPosition = word.charAt(index);
+    const isCorrectPosition = letter === letterInThatPosition;
+    if (isCorrectPosition) {
+      return "rgb(83,141,78)";
     }
-}
-
-
-/** Fill the HTML table#jeopardy with the categories & cells for questions.
- *
- * - The <thead> should be filled w/a <tr>, and a <td> for each category
- * - The <tbody> should be filled w/NUM_QUESTIONS_PER_CAT <tr>s,
- *   each with a question for each category in a <td>
- *   (initally, just show a "?" where the question/answer would go.)
- */
-
-async function fillTable() {
-
-    let $tr = $('<tr>');
-    
-    for (let i = 0; i < 6; i++) {
-        let $tr = $("<tr>");
-        for (let j = 0; j < 5; j++) {
-            $tr.append(`<td id="${i}-${j}"class="question"></td>`)
-
-        }
-        $('tbody').append($tr)
+    return "rgb(181,159,59)";
+  }
+  /* Fifth Function: handleSubmitWord function to handle when "enter" is hit */
+  function handleSubmitWord() {
+    const currentWordArr = getCurrentWordArr();
+    if (currentWordArr.length != 5) {
+      window.alert("Word Must be 5 letters");
     }
-    $('button').on('click', showLoadingView)
+    const currentWord = currentWordArr.join("");
+    /* ##################################### THIS PORTION OF THE CODE HANDLES THE FLIP OF THE LETTERS*/
+    const firstLetterId = guessedWordCount * 5 + 1;
+    const interval = 200;
+    currentWordArr.forEach((letter, index) => {
+      setTimeout(() => {
+        const tileColor = getTileColor(letter, index);
+        const letterId = firstLetterId + index;
+        const letterEl = document.getElementById(letterId);
+        letterEl.classList.add("animate__flipInX");
+        letterEl.style = `background-color:${tileColor};border-color: ${tileColor}`;
+      }, interval * index);
+    });
 
-
-}
-
-/** Handle clicking on a clue: show the question or answer.
- *
- * Uses .showing property on clue to determine what to show:
- * - if currently null, show question & set .showing to "question"
- * - if currently "question", show answer & set .showing to "answer"
- * - if currently "answer", ignore click
- * */
-
-function handleClick(evt) {
-    let q = evt.target.id[0];
-    let cat = evt.target.id[2];
-    if(q===undefined){
-        throw Error('Hmm Try again. Click away from the question mark')
+    /* FIRST DICUSS WINNING SCENARIOS */
+    guessedWordCount += 1;
+    if (currentWord == word) {
+      window.alert("Congratulations!");
     }
-    console.log(q, cat)
-    let clue = categories[cat].clue[q];
-    if (clue.showing == "question") {
-        $(`#${q}-${cat}`).text(`${clue.answer}`)
-
+    guesswords.push([]);
+    if (guesswords.length > 6) {
+      window.alert(`Sorry, you have no more guesses! The word is ${word}`);
     }
-    if (clue.showing === null) {
-        $(`#${q}-${cat}`).html(`${clue.question}`)
-        clue.showing = "question";
+  }
+  function handleDeleteLetter() {
+    const currentWordArr = getCurrentWordArr();
+    const removedLetter = currentWordArr.pop();
+
+    guesswords[guesswords.length - 1] = currentWordArr;
+    const lastLetterEl = document.getElementById(String(availableSpace - 1));
+    lastLetterEl.textContent = " ";
+    availableSpace = availableSpace - 1;
+  }
+
+  /* First make createSquare and the for loop*/
+  function createSquares() {
+    const gameBoard = document.getElementById("board");
+
+    for (let index = 0; index < 30; index++) {
+      let square = document.createElement("div");
+      square.classList.add("square");
+      /* This is for the animate.css packagfe you use */
+      square.classList.add("animate__animated");
+      square.setAttribute("id", index + 1);
+      gameBoard.appendChild(square);
     }
+  }
 
-}
+  /* Second Function: assign an onclick handler to each key */
 
-/** Wipe the current Jeopardy board, show the loading spinner,
- * and update the button used to fetch data.
- */
+  /*
+  // One way to use event capturing. This is a better way to handle event listeners especialy when content is dynamically rendered
+  const keyboard = document.querySelector("#keyboard-container");
+  keyboard.onclick = (e) => {
+    console.log(e.target.getAttribute("data-key"));
+  }; */
+  const keys = document.querySelectorAll(".keyboard-row button");
+  console.log(keys);
+  for (let i = 0; i < keys.length; i++) {
+    keys[i].onclick = ({ target }) => {
+      const letter = target.getAttribute("data-key");
 
-function showLoadingView() {
-    categories = [];
-    $('thead tr').remove();
-    $('tbody td').remove()
-}
+      if (letter == "enter") {
+        handleSubmitWord();
+        return;
+      }
+      if (letter == "del") {
+        handleDeleteLetter();
+        return;
+      }
 
-/** Remove the loading spinner and update the button used to fetch data. */
-
-function hideLoadingView() {}
-
-/** Start game:
- *
- * - get random category Ids
- * - get data for each category
- * - create HTML table
- * */
-
-async function setupAndStart() {
-    console.log(`setupAndStart`)
-
-    let ids = await getCategoryIds();
-
-    for (let id of ids) {
-        categories.push(await getCategory(id))
-    }
-    fillTable()
-    console.log(`click`)
-    
-}
-
-/** On click of start / restart button, set up game. */
-// TODO
-$(window).on('load', setupAndStart)
-
-
-/** On page load, add event handler for clicking clues */
-$('tbody').on('click', handleClick)
-// TODO
+      updateGuessedWords(letter);
+    };
+  }
+});
